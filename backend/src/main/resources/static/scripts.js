@@ -12,8 +12,8 @@ async function fetchDataFromAPI(url, options) {
         decreaseLoadingCounter();
     }
 }
-
-let postConversationsURL = 'http://localhost:8080/api/conversations';
+let baseUrl = window.origin
+let postConversationsURL = `${baseUrl}/api/conversations`;
 let postConversationsOptions = {
     method: 'POST',
     headers: {
@@ -83,7 +83,7 @@ function establishConversation() {
 
 
 async function postMessage (conversationToken,message) {
-    let postConversationsMessagesURL = `http://localhost:8080/api/conversations/${conversationToken}/messages`
+    let postConversationsMessagesURL = `${baseUrl}/api/conversations/${conversationToken}/messages`
     let postConversationsMessagesOptions = {
         method: 'POST',
         headers: {
