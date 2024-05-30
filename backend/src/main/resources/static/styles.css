@@ -179,7 +179,7 @@ h1, h2, h3, h4, h5, h6 {
 .chat-aside .mobile-toggle {
   display: none;
   cursor: pointer;
-  background: #3496BA;
+  background: #77c0db;
   position: absolute;
   border-radius: 0 4px 4px 0;
   right: 0;
@@ -240,11 +240,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .chat-aside .conversation-list .conversation-item.active {
-  background-color: #ADD5E3;
+  background-color: #a0d2e5;
 }
 
 .chat-aside .conversation-list .conversation-item:hover {
-  background-color: #BFE5FF;
+  background-color: #c8e5f0;
   cursor: pointer;
 }
 
@@ -290,11 +290,16 @@ h1, h2, h3, h4, h5, h6 {
   height: 3rem;
   font-size: 3rem;
   line-height: calc(3rem / 2);
-  background: #3496BA;
+  background: #77c0db;
   border: 0;
   color: white;
   border-radius: 10px;
   font-weight: lighter;
+}
+
+.chat-aside .finatix-container button:hover {
+  background: #a0d2e5;
+  cursor: pointer;
 }
 
 #chat-box {
@@ -323,7 +328,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #chat-box #chat-messages .message-container.ai-message .message-content {
-  background-color: #ADD5E3;
+  background-color: #77c0db;
 }
 
 #chat-box #chat-messages .message-container.user-message {
@@ -331,7 +336,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #chat-box #chat-messages .message-container.user-message .message-content {
-  background-color: #DDD;
+  background-color: #DDDDDD;
 }
 
 #chat-box #chat-messages .message-container .message-content {
@@ -392,7 +397,7 @@ h1, h2, h3, h4, h5, h6 {
   height: 2.875rem;
   padding: 0 1rem;
   text-transform: uppercase;
-  background-color: #3496BA;
+  background-color: #77c0db;
   border-radius: 0 12px 12px 0;
   border-left: 0;
   border-top: 1px solid #a3a3a3;
@@ -401,21 +406,26 @@ h1, h2, h3, h4, h5, h6 {
   color: white;
 }
 
+#chat-box .new-message .input-group-append button:hover {
+  background: #a0d2e5;
+  cursor: pointer;
+}
+
 @keyframes colors {
   0% {
-    stroke: #4285F4;
+    stroke: #EF7E18;
   }
   25% {
-    stroke: #DE3E35;
+    stroke: white;
   }
   50% {
-    stroke: #F7C223;
+    stroke: #3295BA;
   }
   75% {
-    stroke: #1B9A59;
+    stroke: #082E51;
   }
   100% {
-    stroke: #4285F4;
+    stroke: #a0a;
   }
 }
 

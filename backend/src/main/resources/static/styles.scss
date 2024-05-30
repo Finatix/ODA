@@ -7,10 +7,16 @@
  *
  */
 
-$backgroundColor: #082E51;
-$chatBubbleFromAiBackgroundColor: #ADD5E3;
-$chatBubbleFromUserBackgroundColor: #DDD;
-$ctaBackgroundColor: #3496BA;
+$primaryColor: #3295BA;
+$secondaryColor: #082E51;
+$secondaryGrey: #DDDDDD;
+$accentColor: #EF7E18;
+
+$backgroundColor: $secondaryColor;
+$chatBubbleFromAiBackgroundColor: lighten($primaryColor, 20%);
+$chatBubbleFromUserBackgroundColor: $secondaryGrey;
+$activeConversationItem: lighten($primaryColor, 30%);
+$ctaBackgroundColor: lighten($primaryColor, 20%);
 $topBarHeight: 4.25rem;
 $newMessageHeight: 5.5rem;
 $finatixLogoHeight: 5rem;
@@ -239,11 +245,11 @@ h1, h2, h3, h4, h5, h6 {
       padding: 1rem;
 
       &.active {
-        background-color: #ADD5E3;
+        background-color: $activeConversationItem;
       }
 
       &:hover {
-        background-color: #BFE5FF;
+        background-color: lighten($activeConversationItem, 10%);
         cursor: pointer;
       }
 
@@ -295,6 +301,11 @@ h1, h2, h3, h4, h5, h6 {
       color: white;
       border-radius: 10px;
       font-weight: lighter;
+
+      &:hover {
+        background: lighten($ctaBackgroundColor, 10%);
+        cursor: pointer;
+      }
     }
   }
 }
@@ -306,7 +317,6 @@ h1, h2, h3, h4, h5, h6 {
   height: calc(100svh - #{$topBarHeight});
 
   #chat-messages {
-    // overflow: scroll;
     overflow: auto;
     height: calc(100svh - #{$topBarHeight} - #{$newMessageHeight});
     display: flex;
@@ -405,17 +415,22 @@ h1, h2, h3, h4, h5, h6 {
         border-right: 1px solid $borderColor;
         border-bottom: 1px solid $borderColor;
         color: white;
+
+        &:hover {
+          background: lighten($ctaBackgroundColor, 10%);
+          cursor: pointer;
+        }
       }
     }
   }
 }
 
 @keyframes colors {
-  0% { stroke: #4285F4; }
-  25% { stroke: #DE3E35; }
-  50% { stroke: #F7C223; }
-  75% { stroke: #1B9A59; }
-  100% { stroke: #4285F4; }
+  0% { stroke: $accentColor; }
+  25% { stroke: lighten($accentColor, 50%)}
+  50% { stroke: $primaryColor; }
+  75% { stroke: $secondaryColor; }
+  100% { stroke: #a0a; }
 }
 
 @keyframes dash {
