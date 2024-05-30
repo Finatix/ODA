@@ -10,7 +10,7 @@ services:
       - "8080:8080"
     environment:
       OPENAI_API_KEY: ${OPENAI_API_KEY}
-      SPRING_PROFILES_ACTIVE: prod
+      SPRING_PROFILES_ACTIVE: ${ENVIRONMENT}
       VDB_PASSWORD: ${VDB_PASSWORD}
       VDB_USER: ${VDB_USER}
       VDB_URL: milvus-standalone
@@ -20,7 +20,7 @@ services:
       DB_TABLE: ${DB_TABLE}
       DB_URL: postgres
       DB_PORT: 5432
-      DATAIMPORT_ENABLED: true
+      DATAIMPORT_ENABLED: ${DATAIMPORT_ENABLED}
 
   postgres:
     container_name: postgres
@@ -57,8 +57,8 @@ services:
     image: minio/minio:RELEASE.2023-03-20T20-16-18Z
     restart: always
     environment:
-      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
-      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
     ports:
       - "9001:9001"
       - "9000:9000"

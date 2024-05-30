@@ -1,14 +1,14 @@
 spring:
   profiles:
-    active: "local"
+      active: "local"
   ai:
     vectorstore:
       milvus:
         client:
-          host: "localhost"
-          port: 19530
-          username: "root"
-          password: "milvus"
+          host: ${VDB_URL:localhost}
+          port: ${VDB_PORT:19530}
+          username: ${VDB_USER:root}
+          password: ${VDB_PASSWORD:milvus}
         databaseName: "default"
         collectionName: "vector_store"
         embeddingDimension: 1536
@@ -19,9 +19,9 @@ spring:
     retry:
       max-attempts: 1
   datasource:
-    url: jdbc:postgresql://localhost:5432/conversation
-    username: user
-    password: password
+    url: jdbc:postgresql://${DB_URL:localhost}:${DB_PORT:5432}/conversation
+    username: ${DB_USER:user}
+    password: ${DB_PASSWORD:password}
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
@@ -31,7 +31,5 @@ spring:
     enabled: true
     locations: classpath:db/migration
     baseline-on-migrate: true
-  dataimport:
-    enabled: false
   thymeleaf: # Thymeleaf
     cache: false
