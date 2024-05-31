@@ -1,3 +1,10 @@
+<p align="center" width="100%">
+    <img width="33%" src="./resources/oda_banner.png">
+</p>
+<p align="right" width="100%" style="margin-top: -100px; margin-left: -100px">
+    <img width="25%" src="./resources/finatix_banner_white.png">
+</p>
+
 # LODH 2024 Open Data Chatbot
 
 This project is developed as part of the Leipzig Open Data Hackathon 2024.
