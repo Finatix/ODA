@@ -19,7 +19,7 @@ spring:
     retry:
       max-attempts: 1
   datasource:
-    url: jdbc:postgresql://${DB_URL:localhost}:${DB_PORT:5432}/conversation
+    url: jdbc:postgresql://${DB_URL:localhost}:${DB_PORT:5432}/${DB_TABLE:conversation}
     username: ${DB_USER:user}
     password: ${DB_PASSWORD:password}
   jpa:
