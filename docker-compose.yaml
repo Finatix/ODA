@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   backend:
-    profiles: ["backend"]
+    profiles: [ "backend" ]
     container_name: backend
     build:
       context: backend
@@ -23,8 +23,17 @@ services:
       DB_PORT: ${DB_PORT:-5432}
       DATAIMPORT_ENABLED: ${DATAIMPORT_ENABLED:-false}
 
+  python-backend:
+    build:
+      context: server
+    container_name: python-backend
+    ports:
+      - "8000:8000"
+    profiles: [ "python-backend" ]
+    restart: unless-stopped
+
   postgres:
-    profiles: ["postgres"]
+    profiles: [ "postgres" ]
     container_name: postgres
     image: postgres:16
     restart: always
@@ -38,7 +47,7 @@ services:
       - postgres-data:/var/lib/postgresql/data
 
   etcd:
-    profiles: ["etcd"]
+    profiles: [ "etcd" ]
     container_name: milvus-etcd
     image: quay.io/coreos/etcd:v3.5.5
     restart: always
@@ -57,7 +66,7 @@ services:
       retries: 3
 
   minio:
-    profiles: ["minio"]
+    profiles: [ "minio" ]
     container_name: milvus-minio
     image: minio/minio:RELEASE.2023-03-20T20-16-18Z
     restart: always
@@ -77,7 +86,7 @@ services:
       retries: 3
 
   standalone:
-    profiles: ["milvus"]
+    profiles: [ "milvus" ]
     container_name: milvus-standalone
     image: milvusdb/milvus:v2.4.1
     restart: always
@@ -103,7 +112,7 @@ services:
       - "minio"
 
   caddy:
-    profiles: ["caddy"]
+    profiles: [ "caddy" ]
     container_name: caddy
     image: caddy:2-alpine
     restart: always
