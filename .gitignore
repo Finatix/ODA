@@ -6,6 +6,7 @@ build/
 !**/src/test/**/build/
 .env
 .venv
+__pycache__
 
 ### macos ###
 .DS_Store
