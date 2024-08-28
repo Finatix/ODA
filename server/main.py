@@ -1,5 +1,3 @@
-#! /bin/env python3
-
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse,  HTMLResponse
 from pathlib import Path
