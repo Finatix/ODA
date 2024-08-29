@@ -1,8 +1,8 @@
 from .Message import Message
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Annotated
-from uuid import UUID
+from uuid import UUID, uuid4
 
 class Conversation(BaseModel):
-    token: Annotated[UUID, "the token of the conversation"]
-    messages: Annotated[list[Message], "the message list"]
+    token: Annotated[UUID, "the token of the conversation", Field(default_factory=uuid4)]
+    messages: Annotated[list[Message], "the message list", Field(default=[])]
