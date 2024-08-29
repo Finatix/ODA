@@ -1,3 +1,4 @@
+from components.responses import *
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -26,18 +27,21 @@ async def index():
     return path.read_text()
 
 ## api
-@app.get("/api/conversations", summary="Get conversations by tokens")
-def get_conversations(tokens: Annotated[list[str], "List of conversation tokens"]):
-    raise HTTPException(501, "not (yet) implemented")
 
 @app.post("/api/conversations", summary="Start a conversation")
-def start_conversation():
+def start_conversation() -> ConversationResponse:
     raise HTTPException(501, "not (yet) implemented")
 
-@app.get("/api/conversations/{conversation_token}", summary="Get conversation details")
-def get_conversation_details(conversation_token: Annotated[str, "Token of the conversation session"]):
+@app.get("/api/conversations", summary="Get conversations by tokens")
+def get_conversations(tokens: Annotated[list[str], "List of conversation tokens"]) -> list[PastConversation]:
     raise HTTPException(501, "not (yet) implemented")
 
 @app.post("/api/conversations/{conversation_token}/messages", summary="Send a message in a conversation")
-def send_message(coversation_token: Annotated[str, "Token of the conversation"]):
+def send_message(
+        coversation_token: Annotated[str, "Token of the conversation"],
+        message: Annotated[UserMessage, "the message"]) -> ConversationResponse:
+    raise HTTPException(501, "not (yet) implemented")
+
+@app.get("/api/conversations/{conversation_token}", summary="Get conversation details")
+def get_conversation_details(conversation_token: Annotated[str, "Token of the conversation session"]) -> Conversation:
     raise HTTPException(501, "not (yet) implemented")
