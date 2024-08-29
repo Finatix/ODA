@@ -42,6 +42,6 @@ def send_message(
         message: Annotated[UserMessage, "the message"]) -> ConversationResponse:
     raise HTTPException(501, "not (yet) implemented")
 
-@app.get("/api/conversations/{conversation_token}", summary="Get conversation details")
+@app.get("/api/conversations/{conversation_token}", summary="Get conversation details by token")
 def get_conversation_details(conversation_token: Annotated[str, "Token of the conversation session"]) -> Conversation:
     raise HTTPException(501, "not (yet) implemented")
