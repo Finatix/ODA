@@ -1,11 +1,12 @@
+from abc import ABC, abstractmethod
 from typing import override
-from uuid import UUID
+from uuid import UUID, uuid4
 
-class ConversationManager:
+class ConversationManager(ABC):
     """
     interface class for managing conversation
     """
-
+    @abstractmethod
     def start_conversation(self) -> UUID:
         """
         Starts a new conversation
@@ -13,4 +14,4 @@ class ConversationManager:
         Returns:
             UUID: the token of the conversation
         """
-        raise NotImplementedError("abstract method call")
+        return uuid4()

@@ -1,6 +1,5 @@
-from .ConversationManager import ConversationManager
+from .ConversationManager import ConversationManager, UUID
 from typing import override
-from uuid import UUID, uuid4
 
 class MockConversationManager(ConversationManager):
     """
@@ -13,6 +12,6 @@ class MockConversationManager(ConversationManager):
         Starts a new conversation
 
         Returns:
-            str: the UUID token of the conversation
+            UUID: the UUID token of the conversation
         """
-        return uuid4()
+        return super().start_conversation()
