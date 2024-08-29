@@ -224,10 +224,23 @@ function addConversationNode(conversationItem) {
     convHeading.innerText = conversationItem.title;
     let convPreview = document.createElement("p");
     convPreview.className = "conversation-preview";
-    convPreview.innerText = conversationItem.messages[conversationItem.messages.length-1].text.slice(0,30) + "...";
+    convPreview.innerText = getLastMessageText(conversationItem).slice(0, 30) + "...";
     articleNode.appendChild(convHeading);
     articleNode.appendChild(convPreview);
     conversationList.appendChild(articleNode);
+}
+
+function getLastMessageText(conversationItem) {
+    if (!conversationItem.messages) {
+        return "";
+    }
+    let text = "";
+    for (const message of conversationItem.messages) {
+        if (message.text) {
+            text = message.text;
+        }
+    }
+    return text;
 }
 
 function renderMessages(messages) {
