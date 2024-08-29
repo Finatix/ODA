@@ -1,4 +1,4 @@
-from components.responses import *
+from components.api import Conversation, ConversationResponse, PastConversation, UserMessage
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
