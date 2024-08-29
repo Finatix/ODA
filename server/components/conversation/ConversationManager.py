@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from typing import override
 from uuid import UUID, uuid4
 
 class ConversationManager(ABC):
