@@ -24,13 +24,26 @@ services:
       DATAIMPORT_ENABLED: ${DATAIMPORT_ENABLED:-false}
 
   python-backend:
+    profiles: [ "python-backend" ]
+    container_name: python-backend
     build:
       context: server
-    container_name: python-backend
+    restart: unless-stopped
     ports:
       - "8000:8000"
-    profiles: [ "python-backend" ]
-    restart: unless-stopped
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      SPRING_PROFILES_ACTIVE: ${ENVIRONMENT:-prod}
+      VDB_PASSWORD: ${VDB_PASSWORD}
+      VDB_USER: ${VDB_USER}
+      VDB_URL: milvus-standalone
+      VDB_PORT: ${VDB_PORT:-19530}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_TABLE: ${DB_TABLE:-conversation}
+      DB_URL: ${DB_URL:-postgres}
+      DB_PORT: ${DB_PORT:-5432}
+      DATAIMPORT_ENABLED: ${DATAIMPORT_ENABLED:-false}
 
   postgres:
     profiles: [ "postgres" ]
