@@ -1,7 +1,8 @@
-from fastapi import FastAPI
-from fastapi.responses import FileResponse,  HTMLResponse
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
+from typing import Annotated
 
 # settings
 
@@ -18,6 +19,25 @@ app.mount("/static", StaticFiles(directory=STATIC_DIR))
 
 ## frontend
 @app.head("/")
-@app.get("/")
+@app.get("/", summary="Returns the frontend", response_class=HTMLResponse)
 async def index():
-    return FileResponse(HTML_DIR / "index.html")
+    path = HTML_DIR / "index.html"
+
+    return path.read_text()
+
+## api
+@app.get("/api/conversations", summary="Get conversations by tokens")
+def get_conversations(tokens: Annotated[list[str], "List of conversation tokens"]):
+    raise HTTPException(501, "not (yet) implemented")
+
+@app.post("/api/conversations", summary="Start a conversation")
+def start_conversation():
+    raise HTTPException(501, "not (yet) implemented")
+
+@app.get("/api/conversations/{conversation_token}", summary="Get conversation details")
+def get_conversation_details(conversation_token: Annotated[str, "Token of the conversation session"]):
+    raise HTTPException(501, "not (yet) implemented")
+
+@app.post("/api/conversations/{conversation_token}/messages", summary="Send a message in a conversation")
+def send_message(coversation_token: Annotated[str, "Token of the conversation"]):
+    raise HTTPException(501, "not (yet) implemented")
