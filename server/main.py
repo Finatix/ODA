@@ -1,5 +1,6 @@
-from components.api import Conversation, ConversationResponse, PastConversation, UserMessage
-from fastapi import FastAPI, HTTPException
+from .components.api import Conversation, ConversationResponse, PastConversation, UserMessage
+from .services import conversation_manager, ConversationManager
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
@@ -29,8 +30,10 @@ async def index():
 ## api
 
 @app.post("/api/conversations", summary="Start a conversation")
-def start_conversation() -> ConversationResponse:
-    raise HTTPException(501, "not (yet) implemented")
+def start_conversation(conversation_manager: Annotated[ConversationManager, Depends(conversation_manager)]) -> ConversationResponse:
+    token = conversation_manager.start_conversation()
+
+    return ConversationResponse(conversationToken=token)
 
 @app.get("/api/conversations", summary="Get conversations by tokens")
 def get_conversations(tokens: Annotated[list[str], "List of conversation tokens"]) -> list[PastConversation]:
