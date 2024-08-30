@@ -2,7 +2,7 @@
 """
 
 from .components.api import Conversation, ConversationResponse, PastConversation, UserMessage
-from .services import conversation_manager, ConversationManager
+from .services import conversation_manager, generator, ConversationManager, Generator
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -65,13 +65,20 @@ def get_conversations(
 def send_message(
         conversation_manager: Annotated[ConversationManager, Depends(conversation_manager)],
         conversation_token: Annotated[str, "Token of the conversation"],
+        generator: Annotated[Generator, Depends(generator)],
         message: Annotated[UserMessage, "the message"]) -> ConversationResponse:
 
     conversation = conversation_manager.get_conversation(conversation_token)
 
-    conversation.add_message(message=message.message, sender="User")
+    prompt = message.message
 
-    raise HTTPException(501, "not (yet) implemented")
+    conversation.add_message(message=prompt, sender="User")
+
+    response = generator.generate(prompt, conversation)
+
+    conversation.add_message(message=response, sender="AI")
+
+    return ConversationResponse(conversationToken=conversation_token, response=response)
 
 @app.get("/api/conversations/{conversation_token}", summary="Get conversation details by token")
 def get_conversation_details(conversation_token: Annotated[str, "Token of the conversation session"]) -> Conversation:
