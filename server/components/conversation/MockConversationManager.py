@@ -17,7 +17,7 @@ class MockConversationManager(ConversationManager):
     @override
     def get_conversation(self, token: UUID) -> Conversation:
         if token not in self.__conversations:
-            conversation = Conversation(token=token, title=f"Conversation {len(self.__conversations) + 1}")
+            conversation = Conversation(token=token)
             self.__conversations[token] = conversation
 
         return self.__conversations[token]
