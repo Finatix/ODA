@@ -11,4 +11,4 @@ class MockGenerator(Generator):
 
     @override
     def generate(self, prompt: str, conversation: Conversation) -> str:
-        return reversed(prompt)
+        return prompt[::-1]
