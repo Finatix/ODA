@@ -1,9 +1,11 @@
 """entrypoint of the python web app using FastAPI
 """
 
+from .components.ai import Generator
 from .components.api import Conversation, ConversationResponse, PastConversation, UserMessage
-from .services import conversation_manager, generator, ConversationManager, Generator
-from fastapi import Depends, FastAPI, HTTPException
+from .components.conversation import ConversationManager
+from .services import conversation_manager, generator
+from fastapi import Depends, FastAPI
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
