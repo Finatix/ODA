@@ -8,6 +8,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 from typing import Annotated
+from uuid import UUID
 
 # settings
 
@@ -41,8 +42,24 @@ def start_conversation(conversation_manager: Annotated[ConversationManager, Depe
     return ConversationResponse(conversationToken=token)
 
 @app.get("/api/conversations", summary="Get conversations by tokens")
-def get_conversations(tokens: Annotated[list[str], "List of conversation tokens"]) -> list[PastConversation]:
-    raise HTTPException(501, "not (yet) implemented")
+def get_conversations(
+        conversation_manager: Annotated[ConversationManager, Depends(conversation_manager)],
+        tokens: Annotated[list[UUID], "List of conversation tokens"]
+    ) -> list[PastConversation]:
+    """Get conversations by tokens
+
+    Args:
+        tokens (list[UUID]): List of conversation tokens
+
+    Returns:
+        list[PastConversation]: List of conversations
+    """
+    conversations = []
+    for token in tokens:
+        conversation = conversation_manager.get_past_conversation(token)
+        conversations.append(conversation)
+
+    return conversations;
 
 @app.post("/api/conversations/{conversation_token}/messages", summary="Send a message in a conversation")
 def send_message(
