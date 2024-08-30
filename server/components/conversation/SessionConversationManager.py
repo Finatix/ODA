@@ -2,8 +2,9 @@
 stores its converstions in the session
 """
 
-from ..api import Conversation, PastConversation, SessionData
+from ..api import Conversation, PastConversation
 from ..exceptions import conversationTokenNotFound
+from ..session import SessionData
 from .ConversationManager import ConversationManager
 from typing import override
 from uuid import UUID

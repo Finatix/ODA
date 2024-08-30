@@ -1,8 +1,8 @@
 """service for the ConversationManager
 """
 
-from ..components.api import SessionData
 from ..components.conversation import ConversationManager, SessionConversationManager
+from ..components.session import SessionData
 from .session_data import session_data
 from fastapi import Depends
 from typing import Annotated
