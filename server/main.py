@@ -1,3 +1,6 @@
+"""entrypoint of the python web app using FastAPI
+"""
+
 from .components.api import Conversation, ConversationResponse, PastConversation, UserMessage
 from .services import conversation_manager, ConversationManager
 from fastapi import Depends, FastAPI, HTTPException
@@ -31,6 +34,8 @@ async def index():
 
 @app.post("/api/conversations", summary="Start a conversation")
 def start_conversation(conversation_manager: Annotated[ConversationManager, Depends(conversation_manager)]) -> ConversationResponse:
+    """Start a conversation"""
+
     token = conversation_manager.start_conversation()
 
     return ConversationResponse(conversationToken=token)
