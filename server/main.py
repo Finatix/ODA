@@ -26,7 +26,7 @@ app.mount("/static", StaticFiles(directory=STATIC_DIR))
 ## frontend
 @app.head("/")
 @app.get("/", summary="Returns the frontend", response_class=HTMLResponse)
-async def index():
+def index():
     path = HTML_DIR / "index.html"
 
     return path.read_text()
