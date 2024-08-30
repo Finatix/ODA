@@ -59,12 +59,18 @@ def get_conversations(
         conversation = conversation_manager.get_past_conversation(token)
         conversations.append(conversation)
 
-    return conversations;
+    return conversations
 
 @app.post("/api/conversations/{conversation_token}/messages", summary="Send a message in a conversation")
 def send_message(
-        coversation_token: Annotated[str, "Token of the conversation"],
+        conversation_manager: Annotated[ConversationManager, Depends(conversation_manager)],
+        conversation_token: Annotated[str, "Token of the conversation"],
         message: Annotated[UserMessage, "the message"]) -> ConversationResponse:
+
+    conversation = conversation_manager.get_conversation(conversation_token)
+
+    conversation.add_message(message=message.message, sender="User")
+
     raise HTTPException(501, "not (yet) implemented")
 
 @app.get("/api/conversations/{conversation_token}", summary="Get conversation details by token")
