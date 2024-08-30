@@ -9,5 +9,5 @@ class Conversation(BaseModel):
     title: Annotated[str, "the optional title of the conversation", Field(default="")]
     messages: Annotated[list[Message], "the message list", Field(default=[])]
 
-    def toPastConversation(self) -> PastConversation:
+    def to_past_conversation(self) -> PastConversation:
         return PastConversation(title=self.title, id=self.token)

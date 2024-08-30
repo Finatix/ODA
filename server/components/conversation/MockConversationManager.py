@@ -27,7 +27,7 @@ class MockConversationManager(ConversationManager):
 
         conversation = self.get_conversation(token)
 
-        return conversation.toPastConversation()
+        return conversation.to_past_conversation()
 
     @override
     def start_conversation(self) -> UUID:
