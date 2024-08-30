@@ -2,17 +2,28 @@
 """
 
 from .components.ai import Generator, MockGenerator
-from .components.conversation import ConversationManager, MockConversationManager
+from .components.api import SessionData
+from .components.conversation import ConversationManager, SessionConversationManager
+from fastapi import Depends
+from typing import Annotated
 
-def conversation_manager() -> ConversationManager:
+def session_data() -> SessionData:
+    """service for the session data
+
+    Returns:
+        SessionData: the service to be injected
+    """
+    return SessionData()
+
+def conversation_manager(session_data: Annotated[SessionData, Depends(session_data)]) -> ConversationManager:
     """creates the ConversationManager service
 
-    For starters it's just the MockConversationManager
+    Currently it's the SessionConversationManager
 
     Returns:
         ConversationManager: the service to be injected
     """
-    return MockConversationManager()
+    return SessionConversationManager()
 
 def generator() -> Generator:
     """creates the Generator service
