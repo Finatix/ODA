@@ -4,6 +4,7 @@
 from . import Conversation
 from pydantic import BaseModel, Field
 from typing import Annotated
+from uuid import UUID
 
 class SessionData(BaseModel):
-    conversations: Annotated[list[Conversation], "the conversations of this session", Field(default=[])]
+    conversations: Annotated[dict[UUID, Conversation], "the conversations of this session", Field(default={})]
