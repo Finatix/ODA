@@ -1,4 +1,8 @@
-from ..api import PastConversation
+"""
+mock implementation of ConversationManager
+"""
+
+from ..api import Conversation, PastConversation
 from .ConversationManager import ConversationManager, UUID
 from typing import override
 
@@ -8,24 +12,23 @@ class MockConversationManager(ConversationManager):
     """
 
     def __init__(self):
-        self.__titles: dict[UUID, str]
+        self.__conversations: dict[UUID, Conversation] = {}
+
+    @override
+    def get_conversation(self, token: UUID) -> Conversation:
+        if token not in self.__conversations:
+            conversation = Conversation(token=token, title=f"Conversation {len(self.__conversations) + 1}")
+            self.__conversations[token] = conversation
+
+        return self.__conversations[token]
 
     @override
     def get_past_conversation(self, token: UUID) -> PastConversation | None:
 
-        title = self.__get_title(token)
+        conversation = self.get_conversation(token)
 
-        return PastConversation(title=title, id=token)
+        return conversation.toPastConversation()
 
     @override
     def start_conversation(self) -> UUID:
-
         return super().start_conversation()
-
-
-    def __get_title(self, token: UUID) -> str:
-        if not token in self.__titles:
-            index = len(self.__titles) + 1
-            self.__titles[UUID] = f"Conversation {index}"
-
-        return self.__titles[UUID]
