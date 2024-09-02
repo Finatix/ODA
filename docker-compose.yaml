@@ -39,7 +39,10 @@ services:
       - "8000:8000"
     environment:
       OPENAI_API_KEY: ${OPENAI_API_KEY}
-      WEAVIATE_URL: ${WEAVIATE_URL:-http://weaviate}:${WEAVIATE_PORT:-9090}
+      WEAVIATE_HTTP_HOST: ${WEAVIATE_HTTP_HOST:-"0.0.0.0"}
+      WEAVIATE_HTTP_PORT: ${WEAVIATE_HTTP_PORT:-9090}
+      WEAVIATE_GRPC_HOST: ${WEAVIATE_GRPC_HOST:-"0.0.0.0"}
+      WEAVIATE_GRPC_PORT: ${WEAVIATE_GRPC_PORT:-50051}
 
   weaviate:
     <<: *commons
@@ -49,7 +52,7 @@ services:
       - --host
       - ${HOST:-0.0.0.0}
       - --port
-      - ${WEAVIATE_PORT:-9090}
+      - ${WEAVIATE_HTTP_PORT:-9090}
       - --scheme
       - http
     environment:
@@ -59,15 +62,15 @@ services:
       ENABLE_MODULES: text2vec-openai, text2vec-cohere # mandatory during startup
       DISABLE_TELEMETRY: true
     healthcheck:
-      test: "wget --no-verbose --tries=3 --spider ${WEAVIATE_URL:-http://weaviate}:${WEAVIATE_PORT:-9090}/v1/.well-known/ready || exit 1"
+      test: "wget --no-verbose --tries=3 --spider http://${WEAVIATE_HTTP_HOST:-0.0.0.0}:${WEAVIATE_HTTP_PORT:-9090}/v1/.well-known/ready || exit 1"
       interval: 5s
       timeout: 10s
       retries: 5
       start_period: 10s
     image: semitechnologies/weaviate:${TAG_WEAVIATE:-latest}
     ports:
-      - "${HOST:-0.0.0.0}:${WEAVIATE_PORT:-9090}:${WEAVIATE_PORT:-9090}"
-      - "${HOST:-0.0.0.0:50051:50051"
+      - "${HOST:-0.0.0.0}:${WEAVIATE_HTTP_PORT:-9090}:${WEAVIATE_HTTP_PORT:-9090}"
+      - "${HOST:-0.0.0.0:${WEAVIATE_GRPC_PORT:-50051}:${WEAVIATE_GRPC_PORT:-50051}"
     volumes:
       - weaviate-data:/var/lib/weaviate
 
