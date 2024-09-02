@@ -26,6 +26,7 @@ langchain==0.2.15
 langchain-community==0.2.15
 langchain-core==0.2.37
 langchain-text-splitters==0.2.2
+langchainhub==0.1.21
 langsmith==0.1.108
 markdown-it-py==3.0.0
 MarkupSafe==2.1.5
@@ -50,6 +51,7 @@ SQLAlchemy==2.0.32
 starlette==0.38.2
 tenacity==8.5.0
 typer==0.12.5
+types-requests==2.32.0.20240712
 typing-inspect==0.9.0
 typing_extensions==4.12.2
 urllib3==2.2.2
