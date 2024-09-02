@@ -1,19 +1,15 @@
 """service for the ConversationManager
 """
 
-from ..components.conversation import ConversationManager, SessionConversationManager
-from ..components.session import SessionData
-from .session_data import session_data
-from fastapi import Depends
-from typing import Annotated
+from ..components.conversation import ConversationManager, MockConversationManager
 
 
-def conversation_manager(session_data: Annotated[SessionData, Depends(session_data)]) -> ConversationManager:
+def conversation_manager() -> ConversationManager:
     """creates the ConversationManager service
 
-    Currently it's the SessionConversationManager
+    Currently it's just the MockConversationManager
 
     Returns:
         ConversationManager: the service to be injected
     """
-    return SessionConversationManager(session_data)
+    return MockConversationManager()
