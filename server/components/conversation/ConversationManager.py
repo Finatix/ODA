@@ -39,14 +39,29 @@ class ConversationManager(ABC):
         Returns:
             PastConversation: the found conversion
         """
-        conversationTokenNotFound(token)
+        conversation = self.get_conversation(token)
+
+        return conversation.to_past_conversation()
 
     @abstractmethod
-    def start_conversation(self) -> UUID:
+    def save_conversation(conversation: Conversation) -> None:
+        """saves the given conversation
+
+        Args:
+            conversation (Conversation): the conversation to be saved
+        """
+        pass
+
+    @abstractmethod
+    def start_conversation(self) -> Conversation:
         """
         Starts a new conversation
 
         Returns:
             UUID: the token of the conversation
         """
-        return uuid4()
+        conversation = Conversation()
+
+        self.save_conversation(conversation)
+
+        return conversation

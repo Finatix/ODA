@@ -3,8 +3,9 @@ mock implementation of ConversationManager
 """
 
 from ..api import Conversation, PastConversation
-from .ConversationManager import ConversationManager, UUID
+from .ConversationManager import ConversationManager
 from typing import override
+from uuid import UUID
 
 class MockConversationManager(ConversationManager):
     """
@@ -24,11 +25,12 @@ class MockConversationManager(ConversationManager):
 
     @override
     def get_past_conversation(self, token: UUID) -> PastConversation | None:
-
-        conversation = self.get_conversation(token)
-
-        return conversation.to_past_conversation()
+        return super().get_past_conversation(token)
 
     @override
-    def start_conversation(self) -> UUID:
+    def save_conversation(self, conversation: Conversation) -> None:
+        self.__conversations[conversation.token] = conversation
+
+    @override
+    def start_conversation(self) -> Conversation:
         return super().start_conversation()

@@ -39,9 +39,9 @@ def index():
 def start_conversation(conversation_manager: Annotated[ConversationManager, Depends(conversation_manager)]) -> ConversationResponse:
     """Start a conversation"""
 
-    token = conversation_manager.start_conversation()
+    conversation = conversation_manager.start_conversation()
 
-    return ConversationResponse(conversationToken=token)
+    return ConversationResponse(conversationToken=conversation.token)
 
 @app.get("/api/conversations", summary="Get conversations by tokens")
 def get_conversations(
@@ -79,6 +79,8 @@ def send_message(
     response = generator.generate(prompt, conversation)
 
     conversation.add_message(message=response, sender="AI")
+
+    conversation_manager.save_conversation(conversation)
 
     return ConversationResponse(conversationToken=conversation_token, response=response)
 
