@@ -1,12 +1,18 @@
-version: '3.8'
+name: ODA
+
+x-commons: &commons
+  networks:
+    - oda
+  pull_policy: always
+  restart: always
 
 services:
   backend:
+    <<: *commons
     profiles: [ "backend" ]
     container_name: backend
     build:
       context: backend
-    restart: always
     ports:
       - "8080:8080"
     environment:
@@ -24,32 +30,51 @@ services:
       DATAIMPORT_ENABLED: ${DATAIMPORT_ENABLED:-false}
 
   python-backend:
+    <<: *commons
     profiles: [ "python-backend" ]
     container_name: python-backend
     build:
       context: server
-    restart: unless-stopped
     ports:
       - "8000:8000"
     environment:
       OPENAI_API_KEY: ${OPENAI_API_KEY}
-      SPRING_PROFILES_ACTIVE: ${ENVIRONMENT:-prod}
-      VDB_PASSWORD: ${VDB_PASSWORD}
-      VDB_USER: ${VDB_USER}
-      VDB_URL: milvus-standalone
-      VDB_PORT: ${VDB_PORT:-19530}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_TABLE: ${DB_TABLE:-conversation}
-      DB_URL: ${DB_URL:-postgres}
-      DB_PORT: ${DB_PORT:-5432}
-      DATAIMPORT_ENABLED: ${DATAIMPORT_ENABLED:-false}
+      WEAVIATE_URL: ${WEAVIATE_URL:-http://weaviate}:${WEAVIATE_PORT:-9090}
+
+  weaviate:
+    <<: *commons
+    container_name: weaviate
+    profiles: [ "weaviate" ]
+    command:
+      - --host
+      - ${HOST:-0.0.0.0}
+      - --port
+      - ${WEAVIATE_PORT:-9090}
+      - --scheme
+      - http
+    environment:
+      QUERY_DEFAULTS_LIMIT: 25
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: true
+      PERSISTENCE_DATA_PATH: /var/lib/weaviate
+      ENABLE_MODULES: text2vec-openai, text2vec-cohere # mandatory during startup
+      DISABLE_TELEMETRY: true
+    healthcheck:
+      test: "wget --no-verbose --tries=3 --spider ${WEAVIATE_URL:-http://weaviate}:${WEAVIATE_PORT:-9090}/v1/.well-known/ready || exit 1"
+      interval: 5s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    image: semitechnologies/weaviate:${TAG_WEAVIATE:-latest}
+    ports:
+      - "${HOST:-0.0.0.0}:${WEAVIATE_PORT:-9090}:${WEAVIATE_PORT:-9090}"
+    volumes:
+      - weaviate-data:/var/lib/weaviate
 
   postgres:
+    <<: *commons
     profiles: [ "postgres" ]
     container_name: postgres
     image: postgres:16
-    restart: always
     environment:
       POSTGRES_DB: ${DB_TABLE:-conversation}
       POSTGRES_USER: ${DB_USER}
@@ -60,10 +85,10 @@ services:
       - postgres-data:/var/lib/postgresql/data
 
   etcd:
+    <<: *commons
     profiles: [ "etcd" ]
     container_name: milvus-etcd
     image: quay.io/coreos/etcd:v3.5.5
-    restart: always
     environment:
       - ETCD_AUTO_COMPACTION_MODE=revision
       - ETCD_AUTO_COMPACTION_RETENTION=1000
@@ -79,10 +104,10 @@ services:
       retries: 3
 
   minio:
+    <<: *commons
     profiles: [ "minio" ]
     container_name: milvus-minio
     image: minio/minio:RELEASE.2023-03-20T20-16-18Z
-    restart: always
     environment:
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
@@ -99,10 +124,10 @@ services:
       retries: 3
 
   standalone:
+    <<: *commons
     profiles: [ "milvus" ]
     container_name: milvus-standalone
     image: milvusdb/milvus:v2.4.1
-    restart: always
     command: [ "milvus", "run", "standalone" ]
     security_opt:
       - seccomp:unconfined
@@ -125,18 +150,23 @@ services:
       - "minio"
 
   caddy:
+    <<: *commons
     profiles: [ "caddy" ]
     container_name: caddy
     image: caddy:2-alpine
-    restart: always
     ports:
       - "80:80"
       - "443:443"
     volumes:
       - ./data/caddy/Caddyfile:/etc/caddy/Caddyfile
 
+networks:
+  oda:
+    name: oda
+
 volumes:
   postgres-data:
   milvus-etcd-data:
   milvus-data:
   minio-data:
+  weaviate-data:
