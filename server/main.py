@@ -5,7 +5,7 @@ from .components.ai import Generator
 from .components.api import Conversation, ConversationResponse, PastConversation, UserMessage
 from .components.conversation import ConversationManager
 from .services import conversation_manager, generator
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, Query
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
@@ -46,7 +46,7 @@ def start_conversation(conversation_manager: Annotated[ConversationManager, Depe
 @app.get("/api/conversations", summary="Get conversations by tokens")
 def get_conversations(
         conversation_manager: Annotated[ConversationManager, Depends(conversation_manager)],
-        tokens: Annotated[list[UUID], "List of conversation tokens"]
+        tokens: Annotated[list[UUID], "List of conversation tokens", Query()]
     ) -> list[PastConversation]:
     """Get conversations by tokens
 
