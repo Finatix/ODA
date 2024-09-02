@@ -7,10 +7,10 @@ from uuid import UUID
 class ODAException(Exception):
     pass
 
-class ConversationEception(ODAException):
+class ConversationException(ODAException):
     pass
 
-class ConversationNotFoundException(ConversationEception, LookupError):
+class ConversationNotFoundException(ConversationException, LookupError):
         pass
 
 def conversationTokenNotFound(token: UUID) -> NoReturn:
