@@ -27,3 +27,8 @@ The idea to achieve this goal, is to use a combination of the following approach
   The similarity search is done for the embedding of the user’s conversation and the newest prompt.
 * The most similar datasets are used as a context to generate the answer to the prompt.
 * For the user prompts a prototypical chatbot frontend will be implemented.
+
+## New Python-FastAPI Backend
+
+In the folder `server` now resides a python backend based on FastAPI.
+It can be started directly from the virtual environment by `fastapi run main.py` or as docker-container `python-backend`
