@@ -1,0 +1,1 @@
+from .WeaviateSettings import WeaviateSettings
