@@ -43,6 +43,7 @@ openai==1.43.0
 orjson==3.10.7
 packaging==24.1
 pydantic==2.8.2
+pydantic-settings==2.4.0
 pydantic_core==2.20.1
 Pygments==2.18.0
 python-dotenv==1.0.1
