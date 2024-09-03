@@ -9,11 +9,8 @@ from weaviate import  WeaviateClient
 from weaviate.connect import ConnectionParams, ProtocolParams
 
 def weaviate_client(settings: Annotated[WeaviateSettings, Depends(weaviate_settings)]) -> WeaviateClient:
-
-    http = ProtocolParams(host=settings.http_host, port=settings.http_port, secure=settings.http_secure)
-    grpc = ProtocolParams(host=settings.grpc_host, port=settings.grpc_port, secure=settings.grpc_secure)
-
-    connection = ConnectionParams(http=http, grpc=grpc)
+    params = settings.model_dump()
+    connection = ConnectionParams.from_params(**params)
 
     return WeaviateClient(
         connection_params=connection,
