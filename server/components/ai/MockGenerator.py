@@ -1,7 +1,7 @@
 """mock implemetation of Generator
 """
 
-from ..api import Conversation
+from ..models import Conversation
 from . import Generator
 from typing import override
 

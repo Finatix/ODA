@@ -1,7 +1,7 @@
 """interface for text generation
 """
 
-from ..api import Conversation
+from ..models import Conversation
 from abc import ABC, abstractmethod
 
 class Generator(ABC):

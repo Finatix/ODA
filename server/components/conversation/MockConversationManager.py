@@ -2,7 +2,7 @@
 mock implementation of ConversationManager
 """
 
-from ..api import Conversation, PastConversation
+from ..models import Conversation, PastConversation
 from .ConversationManager import ConversationManager
 from typing import override
 from uuid import UUID

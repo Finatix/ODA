@@ -1,7 +1,7 @@
 """Declares an interface for managing conversations
 """
 
-from ..api import Conversation, PastConversation
+from ..models import Conversation, PastConversation
 from ..exceptions import conversationTokenNotFound
 from abc import ABC, abstractmethod
 from uuid import UUID, uuid4

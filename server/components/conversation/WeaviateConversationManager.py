@@ -2,7 +2,7 @@
 implementation of ConversationManager with a Weaviate database
 """
 
-from ..api import Conversation, Message, PastConversation
+from ..models import Conversation, Message, PastConversation
 from ..exceptions import conversationTokenNotFound
 from .ConversationManager import ConversationManager
 from datetime import datetime, timedelta, UTC

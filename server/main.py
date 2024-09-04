@@ -2,8 +2,8 @@
 """
 
 from .components.ai import Generator
-from .components.api import Conversation, ConversationResponse, PastConversation, UserMessage
 from .components.conversation import ConversationManager
+from .components.models import Conversation, ConversationResponse, PastConversation, UserMessage
 from .services import conversation_manager, generator
 from fastapi import Depends, FastAPI, Query
 from fastapi.responses import HTMLResponse
