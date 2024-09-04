@@ -36,6 +36,7 @@ langchain-community==0.2.15
 langchain-core==0.2.37
 langchain-openai==0.1.23
 langchain-text-splitters==0.2.2
+langchain-weaviate==0.0.2
 langchainhub==0.1.21
 langsmith==0.1.108
 markdown-it-py==3.0.0
@@ -62,6 +63,7 @@ requests==2.32.3
 rich==13.8.0
 setuptools==74.0.0
 shellingham==1.5.4
+simsimd==4.4.0
 sniffio==1.3.1
 soupsieve==2.6
 SQLAlchemy==2.0.32
