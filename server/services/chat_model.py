@@ -1,12 +1,10 @@
-"""service for the LLM
+"""service for the chat model
 """
-
-from ..settings import OpenAi
-from .openai_settings import openai_settings
+from ..components.ai import Factory
+from .ai_factory import ai_factory
 from fastapi import Depends
-from langchain_core.language_models.chat_models import BaseChatModel
-from langchain_openai import ChatOpenAI
+from langchain_core.language_models import BaseChatModel
 from typing import Annotated
 
-def chat_model(settings: Annotated[OpenAi, Depends(openai_settings)]) -> BaseChatModel:
-    return ChatOpenAI(settings.llm_name)
+def chat_model(factory: Annotated[Factory, Depends(ai_factory)]) -> BaseChatModel:
+    return factory.chat_model()
