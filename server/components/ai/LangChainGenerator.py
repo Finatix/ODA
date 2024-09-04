@@ -1,14 +1,14 @@
-"""mock implementation of Generator
+"""implementation of Generator with LangChain
 """
 
 from ..models import Conversation
 from . import Generator
 from typing import override
 
-class MockGenerator(Generator):
-    """mock implementation of Generator
+class LangChainGenerator(Generator):
+    """implementation of Generator with LangChain
     """
 
     @override
     def generate(self, prompt: str, conversation: Conversation) -> str:
-        return prompt[::-1]
+        pass
