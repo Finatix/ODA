@@ -6,6 +6,7 @@ from ..api import Conversation, Message, PastConversation
 from ..exceptions import conversationTokenNotFound
 from .ConversationManager import ConversationManager
 from datetime import datetime, timedelta, UTC
+from logging import getLogger, Logger
 from typing import override
 from uuid import UUID
 from weaviate import WeaviateClient
@@ -23,6 +24,7 @@ class WeaviateConversationManager(ConversationManager):
     def __init__(self, client: WeaviateClient):
         self.__client: WeaviateClient = client
         self.__cache: dict[UUID, Conversation] = {}
+        self.__logger: Logger = getLogger(__name__)
 
     def __del__(self):
         self.__delete_old_conversations()
@@ -62,10 +64,12 @@ class WeaviateConversationManager(ConversationManager):
     def __connect(self) -> None:
         if not self.__is_connected:
             self.__client.connect()
+            self.__logger.info("connected to weaviate")
 
     def __close(self) -> None:
         if self.__is_connected:
             self.__client.close()
+            self.__logger.info("connection to weaviate closed")
 
     def __reconnect(self) -> None:
         self.__close()
@@ -85,8 +89,10 @@ class WeaviateConversationManager(ConversationManager):
         for o in response.objects:
             collection.data.delete_by_id(o.uuid)
             self.__cache.pop(o.uuid, None)
+            self.__logger.info(f"deleted old conversation {o.uuid}")
 
     def __read(self, token: UUID) -> Conversation | None:
+        self.__logger.debug(f"read conversation {token}")
         collection = self.__get_collection()
         if collection is None:
             conversationTokenNotFound(token)
@@ -96,6 +102,7 @@ class WeaviateConversationManager(ConversationManager):
         data_object = collection.query.fetch_object_by_id(token)
 
         if data_object is None:
+            self.__logger.error("data and query not in sync, reconnect ...")
             self.__reconnect()
             return self.__read(token)
 
@@ -111,6 +118,8 @@ class WeaviateConversationManager(ConversationManager):
 
         self.__cache[token] = conversation
 
+        self.__logger.debug(f"loaded conversation {conversation.model_dump_json(indent=4)}")
+
         return conversation
 
     def __write(self, conversation: Conversation) -> None:
@@ -118,14 +127,16 @@ class WeaviateConversationManager(ConversationManager):
         data = conversation.model_dump()
         if collection.data.exists(conversation.token):
             collection.data.update(uuid=conversation.token, properties=data)
-            self.__read(conversation.token)
+            self.__logger.debug(f"update conversation {conversation.token}")
             return
         uuid = collection.data.insert(data)
+        self.__logger.debug(f"inserted new conversation {uuid}")
         conversation.token = uuid
         for message in conversation.messages:
             message.conversation = uuid
 
         self.__write(conversation)
+        self.__read(conversation.token)
 
     def __get_collection(self, create: bool = False) -> Collection | None:
         self.__connect()
@@ -133,11 +144,12 @@ class WeaviateConversationManager(ConversationManager):
         collections = self.__client.collections
         if not collections.exists(name):
             if create:
-                return self.__create_schema()
+                return self.__create_collection()
             return
         return collections.get(name)
 
-    def __create_schema(self) -> Collection:
+    def __create_collection(self) -> Collection:
+        self.__logger.info("create collection for conversations")
         return self.__client.collections.create(
             self.SCHEMA_NAME,
             properties=[
