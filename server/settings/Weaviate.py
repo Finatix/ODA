@@ -4,7 +4,7 @@ from weaviate.auth import AuthCredentials
 from weaviate.config import AdditionalConfig
 from typing import Annotated, Dict, Optional
 
-class WeaviateSettings(BaseSettings):
+class Weaviate(BaseSettings):
     http_host: str
     http_port: int
     http_secure: bool

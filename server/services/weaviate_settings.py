@@ -1,11 +1,11 @@
 """service definitions for weaviate settings
 """
 
-from ..components.weaviate import WeaviateSettings
+from ..settings import Weaviate
 from os import getenv
 
-def weaviate_settings() -> WeaviateSettings:
-    return WeaviateSettings(
+def weaviate_settings() -> Weaviate:
+    return Weaviate(
         http_host=getenv("WEAVIATE_HTTP_HOST", "0.0.0.0"),
         http_port=getenv("WEAVIATE_HTTP_PORT", 9090),
         http_secure=getenv("WEAVIATE_HTTP_SECURE", False),
