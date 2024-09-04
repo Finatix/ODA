@@ -3,7 +3,7 @@ implementation of ConversationManager with a Weaviate database
 """
 
 from ..models import Conversation, Message, PastConversation
-from ..exceptions import conversationTokenNotFound
+from ..exceptions import conversationTokenNotFound, ConversationException
 from .ConversationManager import ConversationManager
 from datetime import datetime, timedelta, UTC
 from logging import getLogger, Logger
@@ -91,7 +91,7 @@ class WeaviateConversationManager(ConversationManager):
             self.__cache.pop(o.uuid, None)
             self.__logger.info(f"deleted old conversation {o.uuid}")
 
-    def __read(self, token: UUID) -> Conversation | None:
+    def __read(self, token: UUID, reconnected: bool = False) -> Conversation | None:
         self.__logger.debug(f"read conversation {token}")
         collection = self.__get_collection()
         if collection is None:
@@ -102,9 +102,11 @@ class WeaviateConversationManager(ConversationManager):
         data_object = collection.query.fetch_object_by_id(token)
 
         if data_object is None:
-            self.__logger.error("data and query not in sync, reconnect ...")
+            if reconnected:
+                raise ConversationException("data and query are not in sync, even after reconnect")
+            self.__logger.error("data and query are not in sync, reconnect ...")
             self.__reconnect()
-            return self.__read(token)
+            return self.__read(token, True)
 
         token = data_object.uuid
         properties = data_object.properties
