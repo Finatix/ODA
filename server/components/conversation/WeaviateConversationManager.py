@@ -55,38 +55,49 @@ class WeaviateConversationManager(ConversationManager):
     def start_conversation(self) -> Conversation:
         return super().start_conversation()
 
+    @property
+    def __is_connected(self) -> bool:
+        return self.__client.is_connected()
+
     def __connect(self) -> None:
-        if not self.__client.is_connected():
+        if not self.__is_connected:
             self.__client.connect()
 
     def __close(self) -> None:
-        if self.__client.is_connected():
+        if self.__is_connected:
             self.__client.close()
 
+    def __reconnect(self) -> None:
+        self.__close()
+        self.__connect()
+
     def __delete_old_conversations(self) -> None:
-        conversations = self.__get_conversations()
-        if conversations is None:
+        if not self.__is_connected:
+            return
+        collection = self.__get_collection()
+        if collection is None:
             return
         yesterday = datetime.now(UTC) - timedelta(days=1)
-        response = conversations.query.fetch_objects(
+        response = collection.query.fetch_objects(
             filters=Filter.by_update_time().less_than(yesterday),
             sort=Sort.by_update_time()
         )
         for o in response.objects:
-            conversations.data.delete_by_id(o.uuid)
+            collection.data.delete_by_id(o.uuid)
             self.__cache.pop(o.uuid, None)
 
     def __read(self, token: UUID) -> Conversation | None:
-        conversations = self.__get_conversations()
-        if conversations is None:
+        collection = self.__get_collection()
+        if collection is None:
             conversationTokenNotFound(token)
-        if not conversations.data.exists(token):
+        if not collection.data.exists(token):
             conversationTokenNotFound(token)
 
-        data_object = conversations.query.fetch_object_by_id(token)
+        data_object = collection.query.fetch_object_by_id(token)
 
         if data_object is None:
-            conversationTokenNotFound(token)
+            self.__reconnect()
+            return self.__read(token)
 
         token = data_object.uuid
         properties = data_object.properties
@@ -96,27 +107,27 @@ class WeaviateConversationManager(ConversationManager):
         timestamp = metadata.creation_time if metadata.last_update_time is None else metadata.last_update_time
         properties["timestamp"] = timestamp
 
-        conversation = Conversation(properties)
+        conversation = Conversation.model_validate(properties)
 
         self.__cache[token] = conversation
-
-        print("fetched conversation: ", conversation)
 
         return conversation
 
     def __write(self, conversation: Conversation) -> None:
-        conversations = self.__get_conversations(create=True)
+        collection = self.__get_collection(create=True)
         data = conversation.model_dump()
-        if conversations.data.exists(conversation.token):
-            conversations.data.update(uuid=conversation.token, properties=data)
-        else:
-            uuid = conversations.data.insert(data)
-            conversation.token = uuid
-            for message in conversation.messages:
-                message.conversation = uuid
-        self.__read(conversation.token)
+        if collection.data.exists(conversation.token):
+            collection.data.update(uuid=conversation.token, properties=data)
+            self.__read(conversation.token)
+            return
+        uuid = collection.data.insert(data)
+        conversation.token = uuid
+        for message in conversation.messages:
+            message.conversation = uuid
 
-    def __get_conversations(self, create: bool = False) -> Collection | None:
+        self.__write(conversation)
+
+    def __get_collection(self, create: bool = False) -> Collection | None:
         self.__connect()
         name = self.SCHEMA_NAME
         collections = self.__client.collections
