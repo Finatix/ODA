@@ -2,8 +2,10 @@
 """
 
 from ..settings import Weaviate
+from functools import lru_cache
 from os import getenv
 
+@lru_cache
 def weaviate_settings() -> Weaviate:
     return Weaviate(
         http_host=getenv("WEAVIATE_HTTP_HOST", "0.0.0.0"),

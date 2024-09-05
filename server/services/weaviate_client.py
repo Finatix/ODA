@@ -4,10 +4,12 @@
 from ..settings import Weaviate
 from .weaviate_settings import weaviate_settings
 from fastapi import Depends
+from functools import lru_cache
 from typing import Annotated
 from weaviate import  WeaviateClient
 from weaviate.connect import ConnectionParams, ProtocolParams
 
+@lru_cache
 def weaviate_client(settings: Annotated[Weaviate, Depends(weaviate_settings)]) -> WeaviateClient:
     params = settings.model_dump()
     connection = ConnectionParams.from_params(**params)
